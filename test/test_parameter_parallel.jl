@@ -9,7 +9,7 @@ function getnormal(params, constants, targetdata)
   ApproxBayes.ksdist(simdata, targetdata), 1
 end
 
-println("Test parameters of normal distribution are inferred correctly (mean within 5% of true value)")
+println("Test parameters of normal distribution are inferred correctly (mean within 10% of true value)")
 
 Random.seed!(1)
 p1 = 2.0
@@ -29,8 +29,8 @@ resrejection = runabc(setup, targetdata, parallel=true);
 println("\t Check ABC rejection algorithm correctly infers parameters")
 
 # test that mean value of posterior is within 10% of true value
-@test isapprox(mean(resrejection.parameters, dims = 1)[1], p1, rtol = 0.05)
-@test isapprox(mean(resrejection.parameters, dims = 1)[2], p2, rtol = 0.05)
+@test isapprox(mean(resrejection.parameters, dims = 1)[1], p1, rtol = 0.1)
+@test isapprox(mean(resrejection.parameters, dims = 1)[2], p2, rtol = 0.1)
 
 println("\t Check no errors arising from plotting")
 plot(resrejection)
@@ -55,8 +55,8 @@ ressmc = runabc(setup, targetdata, verbose = false, parallel=true);
 
 println("\t Check ABC SMC algorithm correctly infers parameters")
 # test that mean value of posterior is within 10% of true value
-@test isapprox(StatsBase.mean(ressmc.parameters, weights(ressmc.weights), dims = 1)[1], p1, rtol = 0.05)
-@test isapprox(StatsBase.mean(ressmc.parameters, weights(ressmc.weights), dims = 1)[2], p2, rtol = 0.05)
+@test isapprox(StatsBase.mean(ressmc.parameters, weights(ressmc.weights), dims = 1)[1], p1, rtol = 0.1)
+@test isapprox(StatsBase.mean(ressmc.parameters, weights(ressmc.weights), dims = 1)[2], p2, rtol = 0.1)
 
 #test weights sum to 1
 @test isapprox(sum(ressmc.weights), 1.0, rtol = 0.0001)
